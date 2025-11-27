@@ -1,0 +1,78 @@
+create table if not exists customers(
+	id_customers int not null,
+    name_customer varchar(100) not null,
+    adress_order varchar(1000) not null,
+    number_phone_customer varchar(45),
+    primary key(id_customers)
+);
+create table if not exists orders(
+	id_order int not null,
+    id_customers int not null,
+    date_of_receipt date,
+    date_of_completion date,
+    primary key(id_order),
+	constraint fk_order_customer
+	foreign key (id_customers)
+	references customers(id_customers)
+	on delete no action
+	on update no action
+);
+create table if not exists product_in_order(
+	id_order int not null,
+    articul_product int not null,
+    quantity int not null,
+    weight_order decimal(2,2),
+    primary key (id_order, articul_product),
+    constraint fk_product_in_order
+    foreign key(id_order)
+    references orders(id_order)
+    on delete no action
+    on update no action,
+    constraint fk_product_in_product
+    foreign key(articul_product)
+    references products(articul_product)
+    on delete no action
+    on update no action
+);
+create table if not exists products(
+	articul_product int not null,
+    name_product varchar(100) not null,
+	unit_product varchar(20),
+    primary key(articul_product)
+);
+create table if not exists supplies(
+	id_supply int not null,
+    id_storage int not null,
+    articul_product int not null,
+    number_storage int not null,
+    date_delivery date,
+    primary key(id_supply),
+	constraint fk_articule_in_supply
+    foreign key(articul_product)
+    references products(articul_product)
+    on delete no action
+    on update no action,
+    constraint fk_supply_in_storage
+    foreign key(id_storage)
+    references storages(id_storage)
+    on delete no action
+    on update no action
+);
+create table if not exists product_in_supply (
+    id_supply int not null,
+    article_product int not null,
+    quantity int not null,
+    line_number int not null, 
+    balance int not null,
+    primary key(id_supply),
+    constraint fk_product_insp_in_supply
+    foreign key(id_supply)
+    references supplies(id_supply)
+    on delete no action
+    on update no action
+);
+create table if not exists storages(
+	id_storage int not null,
+    id_supply int not null,
+    primary key(id_storage)
+);
